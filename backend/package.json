@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts,js --exec \"npx ts-node --esm src/server.ts\"",
+    "migrate": "npx drizzle-kit up --config ./drizzle.config.js",
+    "start": "npx ts-node --esm src/server.ts"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0",
+    "cors": "^2.8.5",
+    "cron": "^4.3.0",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.44.2",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.1",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.9.3",
+    "ts-node": "^10.9.1"
+  }
+}

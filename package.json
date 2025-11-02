@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.21",
+    "@types/react-native": "^0.71.14"
+  }
+}

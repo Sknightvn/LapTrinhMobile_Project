@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {},
+  "include": [
+    "app/**/*",
+    "components/**/*",
+    "services/**/*",
+    "hooks/**/*",
+    "assets/**/*",
+    "**/*.d.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
+}
