@@ -12,10 +12,10 @@ function NoFavoritesFound() {
       <View style={favoritesStyles.emptyIconContainer}>
         <Ionicons name="heart-outline" size={80} color={COLORS.textLight} />
       </View>
-      <Text style={favoritesStyles.emptyTitle}>No favorites yet</Text>
+      <Text style={favoritesStyles.emptyTitle}>Chưa có mục yêu thích</Text>
       <TouchableOpacity style={favoritesStyles.exploreButton} onPress={() => router.push("/")}>
         <Ionicons name="search" size={18} color={COLORS.white} />
-        <Text style={favoritesStyles.exploreButtonText}>Explore Recipes</Text>
+        <Text style={favoritesStyles.exploreButtonText}>Khám phá các công thức</Text>
       </TouchableOpacity>
     </View>
   );

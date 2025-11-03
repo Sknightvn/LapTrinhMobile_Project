@@ -249,7 +249,7 @@ export const MealAPI = {
         ? meal.strInstructions.substring(0, 120) + '...'
         : 'Delicious meal from TheMealDB',
       image: imageUrl,
-      cookTime: '30 minutes',
+      cookTime: '30 Phút',
       servings: 4,
       category: meal.strCategory || 'Main Course',
       area: meal.strArea,

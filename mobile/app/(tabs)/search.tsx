@@ -76,7 +76,7 @@ const SearchScreen = () => {
     handleSearch();
   }, [debouncedSearchQuery, initialLoading]);
 
-  if (initialLoading) return <LoadingSpinner message="Loading recipes..." />;
+  if (initialLoading) return <LoadingSpinner message="Đang tải công thức..." />;
 
   return (
     <View style={searchStyles.container}>
@@ -90,7 +90,7 @@ const SearchScreen = () => {
           />
           <TextInput
             style={searchStyles.searchInput}
-            placeholder="Search recipes, ingredients..."
+            placeholder="Tìm kiếm công thức, nguyên liệu..."
             placeholderTextColor={COLORS.textLight}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -107,14 +107,14 @@ const SearchScreen = () => {
       <View style={searchStyles.resultsSection}>
         <View style={searchStyles.resultsHeader}>
           <Text style={searchStyles.resultsTitle}>
-            {searchQuery ? `Results for "${searchQuery}"` : "Popular Recipes"}
+            {searchQuery ? `Kết quả cho "${searchQuery}"` : "Công thức phổ biến"}
           </Text>
-          <Text style={searchStyles.resultsCount}>{recipes.length} found</Text>
+          <Text style={searchStyles.resultsCount}>{recipes.length} công thức </Text>
         </View>
 
         {loading ? (
           <View style={searchStyles.loadingContainer}>
-            <LoadingSpinner message="Searching recipes..." size="small" />
+            <LoadingSpinner message="Đang tìm kiếm công thức..." size="small" />
           </View>
         ) : (
           <FlatList
@@ -138,9 +138,9 @@ function NoResultsFound() {
   return (
     <View style={searchStyles.emptyState}>
       <Ionicons name="search-outline" size={64} color={COLORS.textLight} />
-      <Text style={searchStyles.emptyTitle}>No recipes found</Text>
+      <Text style={searchStyles.emptyTitle}>Không tìm thấy công thức</Text>
       <Text style={searchStyles.emptyDescription}>
-        Try adjusting your search or try different keywords
+        Thử điều chỉnh tìm kiếm của bạn hoặc thử các từ khóa khác
       </Text>
     </View>
   );

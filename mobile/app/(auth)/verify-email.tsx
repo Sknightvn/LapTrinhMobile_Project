@@ -60,15 +60,15 @@ const VerifyEmail = ({ email, onBack }) => {
           </View>
 
           {/* Title */}
-          <Text style={authStyles.title}>Verify Your Email</Text>
-          <Text style={authStyles.subtitle}>We&apos;ve sent a verification code to {email}</Text>
+          <Text style={authStyles.title}>Xác minh Email của bạn</Text>
+          <Text style={authStyles.subtitle}>Chúng tôi đã gửi mã xác minh đến {email}</Text>
 
           <View style={authStyles.formContainer}>
             {/* Verification Code Input */}
             <View style={authStyles.inputContainer}>
               <TextInput
                 style={authStyles.textInput}
-                placeholder="Enter verification code"
+                placeholder="Nhập mã xác minh"
                 placeholderTextColor={COLORS.textLight}
                 value={code}
                 onChangeText={setCode}
@@ -84,13 +84,13 @@ const VerifyEmail = ({ email, onBack }) => {
               disabled={loading}
               activeOpacity={0.8}
             >
-              <Text style={authStyles.buttonText}>{loading ? "Verifying..." : "Verify Email"}</Text>
+              <Text style={authStyles.buttonText}>{loading ? "Đang xác minh..." : "Xác minh Email"}</Text>
             </TouchableOpacity>
 
             {/* Back to Sign Up */}
             <TouchableOpacity style={authStyles.linkContainer} onPress={onBack}>
               <Text style={authStyles.linkText}>
-                <Text style={authStyles.link}>Back to Sign Up</Text>
+                <Text style={authStyles.link}>Quay lại Đăng ký</Text>
               </Text>
             </TouchableOpacity>
           </View>

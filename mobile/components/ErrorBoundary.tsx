@@ -37,10 +37,10 @@ class ErrorBoundary extends React.Component<React.PropsWithChildren<{}>, EBState
     if (this.state.hasError) {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: COLORS.background }}>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 12 }}>Something went wrong</Text>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.text, marginBottom: 12 }}>Lỗi</Text>
           <Text style={{ color: COLORS.textLight, marginBottom: 16 }}>{String(this.state.error?.message || this.state.error)}</Text>
           <TouchableOpacity onPress={this.handleReload} style={{ backgroundColor: COLORS.primary, paddingHorizontal: 20, paddingVertical: 12, borderRadius: 10 }}>
-            <Text style={{ color: '#fff', fontWeight: '700' }}>Reload</Text>
+            <Text style={{ color: '#fff', fontWeight: '700' }}>Tải lại</Text>
           </TouchableOpacity>
         </View>
       );

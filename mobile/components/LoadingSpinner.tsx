@@ -3,7 +3,7 @@ import { COLORS } from "../constants/colors";
 
 type Props = { message?: string; size?: number | 'small' | 'large' };
 
-export default function LoadingSpinner({ message = "Loading...", size = "large" }: Props) {
+export default function LoadingSpinner({ message = "Đang tải...", size = "large" }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>

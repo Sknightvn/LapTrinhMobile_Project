@@ -139,16 +139,16 @@ const RecipeDetailScreen = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner message="Loading recipe details..." />;
+  if (loading) return <LoadingSpinner message="Đang tải chi tiết công thức..." />;
 
   // If API returned no recipe (e.g. mock list doesn't contain this id),
   // avoid reading properties of null and show a friendly message.
   if (!recipe) {
     return (
       <View style={[recipeDetailStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ fontSize: 18, marginBottom: 12 }}>Recipe not found</Text>
+        <Text style={{ fontSize: 18, marginBottom: 12 }}>Không tìm thấy công thức</Text>
         <TouchableOpacity onPress={() => (router.canGoBack && router.canGoBack() ? router.back() : router.replace('/'))}>
-          <Text style={{ color: COLORS.primary }}>Go back</Text>
+          <Text style={{ color: COLORS.primary }}>Quay lại</Text>
         </TouchableOpacity>
       </View>
     );
@@ -211,7 +211,7 @@ const RecipeDetailScreen = () => {
             {recipe.area && (
               <View style={recipeDetailStyles.locationRow}>
                 <Ionicons name="location" size={16} color={COLORS.white} />
-                <Text style={recipeDetailStyles.locationText}>{recipe.area} Cuisine</Text>
+                <Text style={recipeDetailStyles.locationText}>Ẩm thực {recipe.area}</Text>
               </View>
             )}
           </View>
@@ -228,7 +228,7 @@ const RecipeDetailScreen = () => {
                 <Ionicons name="time" size={20} color={COLORS.white} />
               </LinearGradient>
               <Text style={recipeDetailStyles.statValue}>{recipe.cookTime}</Text>
-              <Text style={recipeDetailStyles.statLabel}>Prep Time</Text>
+              <Text style={recipeDetailStyles.statLabel}>Thời gian chuẩn bị</Text>
             </View>
 
             <View style={recipeDetailStyles.statCard}>
@@ -239,7 +239,7 @@ const RecipeDetailScreen = () => {
                 <Ionicons name="people" size={20} color={COLORS.white} />
               </LinearGradient>
               <Text style={recipeDetailStyles.statValue}>{recipe.servings}</Text>
-              <Text style={recipeDetailStyles.statLabel}>Servings</Text>
+              <Text style={recipeDetailStyles.statLabel}>Phần ăn</Text>
             </View>
           </View>
 
@@ -257,7 +257,7 @@ const RecipeDetailScreen = () => {
                     <Ionicons name="play" size={16} color={COLORS.white} />
                   </LinearGradient>
 
-                  <Text style={recipeDetailStyles.sectionTitle}>Video Tutorial</Text>
+                  <Text style={recipeDetailStyles.sectionTitle}>Video Hướng dẫn</Text>
                 </View>
 
                 <View style={recipeDetailStyles.videoCard}>
@@ -295,7 +295,7 @@ const RecipeDetailScreen = () => {
                       return thumbnailError ? (
                         <TouchableOpacity onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${ytId}`)} style={{ borderRadius: 12, backgroundColor: '#000', height: 200, justifyContent: 'center', alignItems: 'center' }}>
                           <Ionicons name="play-circle" size={48} color={'rgba(255,255,255,0.9)'} />
-                          <Text style={{ color: '#fff', marginTop: 8 }}>Watch on YouTube</Text>
+                          <Text style={{ color: '#fff', marginTop: 8 }}>Xem trên YouTube</Text>
                         </TouchableOpacity>
                       ) : (
                         <TouchableOpacity onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${ytId}`)}>
@@ -326,7 +326,7 @@ const RecipeDetailScreen = () => {
                   })()}
                   {/* Always provide an explicit 'Open on YouTube' CTA in case thumbnail or embed fails */}
                   <TouchableOpacity onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${ytId}`)} style={{ position: 'absolute', right: 12, bottom: 12, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8 }}>
-                    <Text style={{ color: '#fff', fontSize: 14 }}>Open on YouTube</Text>
+                    <Text style={{ color: '#fff', fontSize: 14 }}>Mở trên YouTube</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -342,7 +342,7 @@ const RecipeDetailScreen = () => {
               >
                 <Ionicons name="list" size={16} color={COLORS.white} />
               </LinearGradient>
-              <Text style={recipeDetailStyles.sectionTitle}>Ingredients</Text>
+              <Text style={recipeDetailStyles.sectionTitle}>Nguyên liệu</Text>
               <View style={recipeDetailStyles.countBadge}>
                 <Text style={recipeDetailStyles.countText}>{recipe.ingredients.length}</Text>
               </View>
@@ -372,7 +372,7 @@ const RecipeDetailScreen = () => {
               >
                 <Ionicons name="book" size={16} color={COLORS.white} />
               </LinearGradient>
-              <Text style={recipeDetailStyles.sectionTitle}>Instructions</Text>
+              <Text style={recipeDetailStyles.sectionTitle}>Hướng dẫn</Text>
               <View style={recipeDetailStyles.countBadge}>
                 <Text style={recipeDetailStyles.countText}>{recipe.instructions.length}</Text>
               </View>
@@ -390,7 +390,7 @@ const RecipeDetailScreen = () => {
                   <View style={recipeDetailStyles.instructionContent}>
                     <Text style={recipeDetailStyles.instructionText}>{instruction}</Text>
                     <View style={recipeDetailStyles.instructionFooter}>
-                      <Text style={recipeDetailStyles.stepLabel}>Step {index + 1}</Text>
+                      <Text style={recipeDetailStyles.stepLabel}>Bước {index + 1}</Text>
                       <TouchableOpacity style={recipeDetailStyles.completeButton}>
                         <Ionicons name="checkmark" size={16} color={COLORS.primary} />
                       </TouchableOpacity>
@@ -412,7 +412,7 @@ const RecipeDetailScreen = () => {
             >
               <Ionicons name="heart" size={20} color={COLORS.white} />
               <Text style={recipeDetailStyles.buttonText}>
-                {isSaved ? "Remove from Favorites" : "Add to Favorites"}
+                {isSaved ? "Xóa khỏi mục Yêu thích" : "Thêm vào mục Yêu thích"}
               </Text>
             </LinearGradient>
           </TouchableOpacity>

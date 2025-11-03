@@ -86,7 +86,7 @@ const HomeScreen = () => {
     loadData();
   }, []);
 
-  if (loading && !refreshing) return <LoadingSpinner message="Loading delicions recipes..." />;
+  if (loading && !refreshing) return <LoadingSpinner message="Đang tải công thức..." />;
 
   return (
     <View style={homeStyles.container}>
@@ -143,7 +143,7 @@ const HomeScreen = () => {
                 />
                 <View style={homeStyles.featuredOverlay}>
                   <View style={homeStyles.featuredBadge}>
-                    <Text style={homeStyles.featuredBadgeText}>Featured</Text>
+                    <Text style={homeStyles.featuredBadgeText}>Nổi bật</Text>
                   </View>
 
                   <View style={homeStyles.featuredContent}>
@@ -203,8 +203,8 @@ const HomeScreen = () => {
           ) : (
             <View style={homeStyles.emptyState}>
               <Ionicons name="restaurant-outline" size={64} color={COLORS.textLight} />
-              <Text style={homeStyles.emptyTitle}>No recipes found</Text>
-              <Text style={homeStyles.emptyDescription}>Try a different category</Text>
+              <Text style={homeStyles.emptyTitle}>Không tìm thấy công thức</Text>
+              <Text style={homeStyles.emptyDescription}>Thử một mục khác</Text>
             </View>
           )}
         </View>

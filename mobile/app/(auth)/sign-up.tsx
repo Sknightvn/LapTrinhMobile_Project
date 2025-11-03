@@ -84,7 +84,7 @@ const SignUpScreen = () => {
             />
           </View>
 
-          <Text style={authStyles.title}>Create Account</Text>
+          <Text style={authStyles.title}>Tạo tài khoản</Text>
 
           <View style={authStyles.formContainer}>
             {/* Container for Clerk Smart CAPTCHA on web. Using nativeID maps to id on web via react-native-web */}
@@ -133,14 +133,14 @@ const SignUpScreen = () => {
               activeOpacity={0.8}
             >
               <Text style={authStyles.buttonText}>
-                {loading ? "Creating Account..." : "Sign Up"}
+                {loading ? "Đang tạo tài khoản..." : "Đăng ký"}
               </Text>
             </TouchableOpacity>
 
             {/* Sign In Link */}
             <TouchableOpacity style={authStyles.linkContainer} onPress={() => router.back()}>
               <Text style={authStyles.linkText}>
-                Already have an account? <Text style={authStyles.link}>Sign In</Text>
+                Đã có tài khoản? <Text style={authStyles.link}>Đăng nhập</Text>
               </Text>
             </TouchableOpacity>
           </View>

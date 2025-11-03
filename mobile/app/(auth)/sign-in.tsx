@@ -77,7 +77,7 @@ const SignInScreen = () => {
             />
           </View>
 
-          <Text style={authStyles.title}>Welcome Back</Text>
+          <Text style={authStyles.title}>Chào mừng trở lại</Text>
 
           {/* FORM CONTAINER */}
           <View style={authStyles.formContainer}>
@@ -123,7 +123,7 @@ const SignInScreen = () => {
               disabled={loading}
               activeOpacity={0.8}
             >
-              <Text style={authStyles.buttonText}>{loading ? "Signing In..." : "Sign In"}</Text>
+              <Text style={authStyles.buttonText}>{loading ? "Đang đăng nhập..." : "Đăng nhập"}</Text>
             </TouchableOpacity>
 
             {/* Sign Up Link */}
@@ -132,7 +132,7 @@ const SignInScreen = () => {
               onPress={() => router.push("/(auth)/sign-up")}
             >
               <Text style={authStyles.linkText}>
-                Don&apos;t have an account? <Text style={authStyles.link}>Sign up</Text>
+                Không có tài khoản? <Text style={authStyles.link}>Đăng ký</Text>
               </Text>
             </TouchableOpacity>
           </View>

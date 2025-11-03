@@ -44,19 +44,19 @@ const FavoritesScreen = () => {
   }, [user.id]);
 
   const handleSignOut = () => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      { text: "Cancel", style: "cancel" },
-  { text: "Logout", style: "destructive", onPress: () => signOut() },
+    Alert.alert("Đăng xuất", "Bạn có chắc chắn muốn đăng xuất không?", [
+      { text: "Hủy", style: "cancel" },
+      { text: "Đăng xuất", style: "destructive", onPress: () => signOut() },
     ]);
   };
 
-  if (loading) return <LoadingSpinner message="Loading your favorites..." />;
+  if (loading) return <LoadingSpinner message="Đang tải mục Yêu thích..." />;
 
   return (
     <View style={favoritesStyles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={favoritesStyles.header}>
-          <Text style={favoritesStyles.title}>Favorites</Text>
+          <Text style={favoritesStyles.title}>Yêu thích</Text>
           <TouchableOpacity style={favoritesStyles.logoutButton} onPress={handleSignOut}>
             <Ionicons name="log-out-outline" size={22} color={COLORS.text} />
           </TouchableOpacity>
