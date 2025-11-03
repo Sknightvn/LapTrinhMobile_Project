@@ -6,6 +6,7 @@ import { API_URL } from "../../constants/api";
 import { MealAPI } from "../../services/mealAPI";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { Image } from "expo-image";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { recipeDetailStyles } from "../../assets/styles/recipe-detail.styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,6 +26,7 @@ const RecipeDetailScreen = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [thumbnailError, setThumbnailError] = useState(false);
   const [embedError, setEmbedError] = useState(false);
+  const [completedSteps, setCompletedSteps] = useState([]);
 
   const { user } = useUser();
   const userId = user?.id;
@@ -62,8 +64,23 @@ const RecipeDetailScreen = () => {
       }
     };
 
+    const loadCompletedSteps = async () => {
+      try {
+        const key = `completed_steps_${userId}_${recipeId}`;
+        const saved = await AsyncStorage.getItem(key);
+        if (saved) {
+          const steps = JSON.parse(saved);
+          setCompletedSteps(steps);
+          console.log('Loaded completed steps:', steps);
+        }
+      } catch (error) {
+        console.error("Error loading completed steps:", error);
+      }
+    };
+
     checkIfSaved();
     loadRecipeDetail();
+    loadCompletedSteps();
     // debug: log youtube URL for troubleshooting
     // (we'll also log when recipe updates below)
   }, [recipeId, userId]);
@@ -79,6 +96,22 @@ const RecipeDetailScreen = () => {
       }
     }
   }, [recipe]);
+
+useEffect(() => {
+  const saveCompletedSteps = async () => {
+    if (!userId || !recipeId) return;
+    
+    try {
+      const key = `completed_steps_${userId}_${recipeId}`;
+      await AsyncStorage.setItem(key, JSON.stringify(completedSteps));
+      console.log('Saved completed steps:', completedSteps);
+    } catch (error) {
+      console.error("Error saving completed steps:", error);
+    }
+  };
+
+  saveCompletedSteps();
+}, [completedSteps, userId, recipeId]);
 
   const getYouTubeId = (url) => {
     if (!url) return null;
@@ -137,6 +170,36 @@ const RecipeDetailScreen = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const toggleStepCompletion = (stepIndex) => {
+    setCompletedSteps(prev => {
+      if (prev.includes(stepIndex)) {
+        const maxCompletedStep = Math.max(...prev);
+        if (stepIndex !== maxCompletedStep) {
+          Alert.alert(
+            "Lỗi",
+            "Bạn chỉ có thể bỏ tick bước cuối cùng đã hoàn thành.",
+            [{ text: "OK" }]
+          );
+          return prev;
+        }
+        return prev.filter(index => index !== stepIndex);
+      } else {
+        const nextStep = prev.length;
+        
+        if (stepIndex !== nextStep) {
+          Alert.alert(
+            "Thực hiện theo thứ tự",
+            `Vui lòng hoàn thành Bước ${nextStep + 1} trước.`,
+            [{ text: "OK" }]
+          );
+          return prev;
+        }
+        
+        return [...prev, stepIndex];
+      }
+    });
   };
 
   if (loading) return <LoadingSpinner message="Đang tải chi tiết công thức..." />;
@@ -398,28 +461,139 @@ const RecipeDetailScreen = () => {
               <View style={recipeDetailStyles.countBadge}>
                 <Text style={recipeDetailStyles.countText}>{recipe.instructions.length}</Text>
               </View>
+
+              {completedSteps.length > 0 && (
+                <TouchableOpacity 
+                  onPress={() => setCompletedSteps([])}
+                  style={{
+                    marginLeft: 'auto',
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    backgroundColor: '#ef4444',
+                    borderRadius: 6,
+                  }}
+                >
+                  <Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>
+                    Reset ({completedSteps.length}/{recipe.instructions.length})
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={{
+              width: '100%',
+              height: 8,
+              backgroundColor: '#e5e7eb',
+              borderRadius: 4,
+              overflow: 'hidden',
+              marginTop: 12,
+              marginBottom: 16,
+            }}>
+              <View style={{
+                width: `${(completedSteps.length / recipe.instructions.length) * 100}%`,
+                height: '100%',
+                backgroundColor: '#10b981',
+                borderRadius: 4,
+              }} />
             </View>
 
             <View style={recipeDetailStyles.instructionsContainer}>
-              {recipe.instructions.map((instruction, index) => (
-                <View key={index} style={recipeDetailStyles.instructionCard}>
-                  <LinearGradient
-                    colors={[COLORS.primary, COLORS.primary + "CC"]}
-                    style={recipeDetailStyles.stepIndicator}
+              {recipe.instructions.map((instruction, index) => {
+                const isCompleted = completedSteps.includes(index);
+                const isNextStep = completedSteps.length === index; // Bước tiếp theo
+                const isLocked = !isCompleted && !isNextStep; // Các bước sau bị khóa
+                
+                return (
+                  <View 
+                    key={index} 
+                    style={[
+                      recipeDetailStyles.instructionCard,
+                      isCompleted && { opacity: 0.7, backgroundColor: '#f0f9ff' },
+                      isLocked && { opacity: 0.4, backgroundColor: '#f5f5f5' } // ← THÊM STYLE KHI KHÓA
+                    ]}
                   >
-                    <Text style={recipeDetailStyles.stepNumber}>{index + 1}</Text>
-                  </LinearGradient>
-                  <View style={recipeDetailStyles.instructionContent}>
-                    <Text style={recipeDetailStyles.instructionText}>{instruction}</Text>
-                    <View style={recipeDetailStyles.instructionFooter}>
-                      <Text style={recipeDetailStyles.stepLabel}>Bước {index + 1}</Text>
-                      <TouchableOpacity style={recipeDetailStyles.completeButton}>
-                        <Ionicons name="checkmark" size={16} color={COLORS.primary} />
-                      </TouchableOpacity>
+                    <LinearGradient
+                      colors={
+                        isCompleted 
+                          ? ["#10b981", "#059669"] 
+                          : isNextStep
+                          ? [COLORS.primary, COLORS.primary + "CC"]
+                          : ["#9ca3af", "#6b7280"] // ← MÀU XÁM KHI KHÓA
+                      }
+                      style={recipeDetailStyles.stepIndicator}
+                    >
+                      {isLocked ? (
+                        <Ionicons name="lock-closed" size={16} color={COLORS.white} /> // ← ICON KHÓA
+                      ) : (
+                        <Text style={recipeDetailStyles.stepNumber}>{index + 1}</Text>
+                      )}
+                    </LinearGradient>
+                    
+                    <View style={recipeDetailStyles.instructionContent}>
+                      <Text 
+                        style={[
+                          recipeDetailStyles.instructionText,
+                          isCompleted && { textDecorationLine: 'line-through', color: '#6b7280' },
+                          isLocked && { color: '#9ca3af' } // ← TEXT XÁM KHI KHÓA
+                        ]}
+                      >
+                        {instruction}
+                      </Text>
+                      
+                      <View style={recipeDetailStyles.instructionFooter}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={[
+                            recipeDetailStyles.stepLabel,
+                            isLocked && { color: '#9ca3af' }
+                          ]}>
+                            Bước {index + 1}
+                          </Text>
+                          {isNextStep && !isCompleted && (
+                            <View style={{
+                              backgroundColor: COLORS.primary,
+                              paddingHorizontal: 8,
+                              paddingVertical: 2,
+                              borderRadius: 4,
+                            }}>
+                              <Text style={{ color: '#fff', fontSize: 10, fontWeight: '600' }}>
+                                Tiếp theo
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                        
+                        <TouchableOpacity 
+                          style={[
+                            recipeDetailStyles.completeButton,
+                            isCompleted && { backgroundColor: '#10b981' },
+                            isLocked && { backgroundColor: '#e5e7eb' } // ← NÚT XÁM KHI KHÓA
+                          ]}
+                          onPress={() => toggleStepCompletion(index)}
+                          disabled={isLocked} // ← DISABLE KHI KHÓA
+                        >
+                          <Ionicons 
+                            name={
+                              isLocked 
+                                ? "lock-closed" 
+                                : isCompleted 
+                                ? "checkmark-circle" 
+                                : "checkmark"
+                            }
+                            size={16} 
+                            color={
+                              isLocked 
+                                ? '#9ca3af' 
+                                : isCompleted 
+                                ? COLORS.white 
+                                : COLORS.primary
+                            }
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              ))}
+                );
+              })}
             </View>
           </View>
 
