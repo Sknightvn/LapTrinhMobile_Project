@@ -9,7 +9,17 @@ import job from './config/cron.js';
 const app = express();
 // Allow CORS from the frontend dev origin. Adjust or expand the origin list for production.
 const corsOptions = {
-  origin: ["http://localhost:8081", "http://localhost:19006", "http://localhost:19000"],
+  origin: function (origin, callback) {
+
+    if (!origin) return callback(null, true);
+    
+    if (ENV.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    callback(null, true);
+  },
+  credentials: true
 };
 app.use(cors(corsOptions));
 // Respond to preflight requests for all routes with a lightweight handler
@@ -61,7 +71,7 @@ app.post('/api/favorites', async (req, res) => {
     res.status(201).json(newFavorite[0]);
   } catch (error) {
     console.log('Error adding favorite', error);
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: 'Something went wrong', details: error.message });
   }
 });
 
@@ -101,6 +111,8 @@ app.delete('/api/favorites/:userId/:recipeId', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log('Server is running on PORT:', PORT);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📱 Local: http://localhost:${PORT}`);
+  console.log(`📱 Network: http://${ENV.HOST}:${PORT}`);
 });

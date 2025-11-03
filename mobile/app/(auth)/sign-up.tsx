@@ -93,7 +93,7 @@ const SignUpScreen = () => {
             <View style={authStyles.inputContainer}>
               <TextInput
                 style={authStyles.textInput}
-                placeholder="Enter email"
+                placeholder="Nhập email"
                 placeholderTextColor={COLORS.textLight}
                 value={email}
                 onChangeText={setEmail}
@@ -106,7 +106,7 @@ const SignUpScreen = () => {
             <View style={authStyles.inputContainer}>
               <TextInput
                 style={authStyles.textInput}
-                placeholder="Enter password"
+                placeholder="Nhập mật khẩu"
                 placeholderTextColor={COLORS.textLight}
                 value={password}
                 onChangeText={setPassword}

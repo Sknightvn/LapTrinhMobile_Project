@@ -245,7 +245,18 @@ const RecipeDetailScreen = () => {
 
           {(() => {
             const ytId = getYouTubeId(recipe.youtubeUrl);
-            if (!ytId) return null;
+            
+            // Debug
+            console.log('YouTube URL:', recipe.youtubeUrl);
+            console.log('YouTube ID:', ytId);
+            
+            if (!ytId) {
+              console.log('No YouTube ID found');
+              return null;
+            }
+
+            const thumbnailUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+            console.log('Thumbnail URL:', thumbnailUrl);
 
             return (
               <View style={recipeDetailStyles.sectionContainer}>
@@ -256,79 +267,90 @@ const RecipeDetailScreen = () => {
                   >
                     <Ionicons name="play" size={16} color={COLORS.white} />
                   </LinearGradient>
-
                   <Text style={recipeDetailStyles.sectionTitle}>Video Hướng dẫn</Text>
                 </View>
 
-                <View style={recipeDetailStyles.videoCard}>
-                  {/* Prefer a dedicated YouTube player (if installed). Otherwise fall back to thumbnail / WebView logic. */}
-                  {(() => {
-                    const Player = YouTubePlayer;
-                    if (Player) {
-                      return <Player videoId={ytId} height={200} />;
-                    }
-
-                    // If player not available, fall back to previous behavior
-                    if (Platform.OS === 'android') {
-                      // First try to embed the video iframe inside WebView with permissive settings.
-                      // If embed fails (onError/onHttpError), setEmbedError(true) and fall back to thumbnail/external-open.
-                      if (!embedError) {
-                        return (
-                          <WebView
-                            style={[recipeDetailStyles.webview, { borderRadius: 12, overflow: 'hidden' }]}
-                            originWhitelist={["*"]}
-                            source={{ html: `<html><head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"><style>body,html{margin:0;padding:0;height:100%;background:#000}iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;border-radius:12px;}</style></head><body><iframe src="https://www.youtube-nocookie.com/embed/${ytId}?rel=0&playsinline=1&enablejsapi=1&origin=https://localhost" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></body></html>` }}
-                            javaScriptEnabled={true}
-                            domStorageEnabled={true}
-                            allowsInlineMediaPlayback={true}
-                            mediaPlaybackRequiresUserAction={false}
-                            mixedContentMode={'always'}
-                            userAgent={'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
-                            onError={(e) => { console.warn('Android WebView embed error', e.nativeEvent); setEmbedError(true); }}
-                            onHttpError={(e) => { console.warn('Android WebView HTTP error', e.nativeEvent); setEmbedError(true); }}
-                            startInLoadingState={true}
-                          />
-                        );
-                      }
-
-                      // embed failed previously — show thumbnail or placeholder
-                      return thumbnailError ? (
-                        <TouchableOpacity onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${ytId}`)} style={{ borderRadius: 12, backgroundColor: '#000', height: 200, justifyContent: 'center', alignItems: 'center' }}>
-                          <Ionicons name="play-circle" size={48} color={'rgba(255,255,255,0.9)'} />
-                          <Text style={{ color: '#fff', marginTop: 8 }}>Xem trên YouTube</Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${ytId}`)}>
-                          <Image
-                            source={{ uri: `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` }}
-                            style={[recipeDetailStyles.webview, { borderRadius: 12, backgroundColor: '#eee' }]}
-                            contentFit="cover"
-                            onError={() => setThumbnailError(true)}
-                          />
-                          <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
-                            <Ionicons name="play-circle" size={64} color={'rgba(255,255,255,0.9)'} />
-                          </View>
-                        </TouchableOpacity>
-                      );
-                    }
-
-                    return (
-                      <WebView
-                        style={recipeDetailStyles.webview}
-                        originWhitelist={["*"]}
-                        source={{ html: `<html><head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"><style>body,html{margin:0;padding:0;height:100%;background:#000}iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;}</style></head><body><iframe src="https://www.youtube.com/embed/${ytId}?rel=0&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></body></html>` }}
-                        javaScriptEnabled
-                        domStorageEnabled
-                        allowsFullscreenVideo
-                        mediaPlaybackRequiresUserAction={false}
+                <TouchableOpacity 
+                  onPress={() => {
+                    const url = `https://www.youtube.com/watch?v=${ytId}`;
+                    console.log('Opening YouTube:', url);
+                    Linking.openURL(url);
+                  }}
+                  style={recipeDetailStyles.videoCard}
+                  activeOpacity={0.8}
+                >
+                  {/* Thumbnail */}
+                  <Image
+                    source={{ uri: thumbnailUrl }}
+                    style={{
+                      width: '100%',
+                      height: 200,
+                      borderRadius: 12,
+                      backgroundColor: '#1a1a1a',
+                    }}
+                    contentFit="cover"
+                    onLoad={() => console.log('Thumbnail loaded successfully')}
+                    onError={(e) => console.log('Thumbnail error:', e)}
+                  />
+                  
+                  {/* Dark Overlay */}
+                  <View style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    borderRadius: 12,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                    {/* Play Button */}
+                    <View style={{
+                      width: 70,
+                      height: 70,
+                      borderRadius: 35,
+                      backgroundColor: 'rgba(255,0,0,0.95)',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.4,
+                      shadowRadius: 8,
+                      elevation: 8,
+                    }}>
+                      <Ionicons 
+                        name="play" 
+                        size={32} 
+                        color="#FFFFFF" 
+                        style={{ marginLeft: 3 }} 
                       />
-                    );
-                  })()}
-                  {/* Always provide an explicit 'Open on YouTube' CTA in case thumbnail or embed fails */}
-                  <TouchableOpacity onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${ytId}`)} style={{ position: 'absolute', right: 12, bottom: 12, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8 }}>
-                    <Text style={{ color: '#fff', fontSize: 14 }}>Mở trên YouTube</Text>
-                  </TouchableOpacity>
-                </View>
+                    </View>
+                  </View>
+
+                  {/* YouTube Badge */}
+                  <View style={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 12,
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    paddingHorizontal: 10,
+                    paddingVertical: 6,
+                    borderRadius: 6,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                    <Ionicons name="logo-youtube" size={16} color="#FF0000" />
+                    <Text style={{ 
+                      color: '#FFFFFF', 
+                      fontSize: 12, 
+                      fontWeight: '600',
+                      marginLeft: 6,
+                    }}>
+                      Xem trên Youtube
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             );
           })()}
